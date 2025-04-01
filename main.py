@@ -7,11 +7,22 @@ from pydantic import BaseModel
 from interpreter import Interprete
 from parser import Parser
 from html_renderer import HTMLRenderer
+from fastapi.middleware.cors import CORSMiddleware
+
+
 
 import traceback
 import uvicorn
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permitir todas las orígenes
+    allow_credentials=True,
+    allow_methods=["*"],  # Permitir todos los métodos
+    allow_headers=["*"],  # Permitir todos los encabezados
+)
 
 # Configurar plantillas y archivos estáticos
 templates = Jinja2Templates(directory="templates")
@@ -20,10 +31,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 class CodigoEntrada(BaseModel):
     codigo: str
 
-@app.get("/", response_class=HTMLResponse)
-async def index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
-
+@app.get("/")
+async def home():
+    return {"mensaje": "Bienvenido a la API del intérprete"}
+            
 @app.post("/interpretar")
 async def interpretar_codigo(entrada: CodigoEntrada):
     try:
@@ -64,7 +75,7 @@ async def interpretar_codigo(entrada: CodigoEntrada):
             "columna": columna
         }
 
-@app.get("/ast")
+"""@app.get("/ast")
 async def obtener_ast(codigo: str):
     try:
         from lexer import Lexer
@@ -93,7 +104,43 @@ async def obtener_ast(codigo: str):
         
         return {"estado": "exito", "ast": serializar_ast(ast_root)}
     except Exception as e:
-        return {"estado": "error", "error": str(e)}
+        return {"estado": "error", "error": str(e)}"""
 
+
+@app.get("/ast")
+async def obtener_ast(codigo: str):
+    try:
+        from lexer import Lexer
+        lexer = Lexer()
+        tokens = lexer.tokenizar(codigo)
+        
+        parser = Parser(tokens)
+        ast_root = parser.analizar()
+        
+        # Convertir AST a una estructura JSON mejorada
+        def serializar_ast(nodo):
+            if nodo is None:
+                return None
+            
+            result = {
+                "tipo": type(nodo).__name__,
+                "linea": getattr(nodo, "linea", None),  # Agregar línea si existe
+                "columna": getattr(nodo, "columna", None),
+            }
+            
+            for key, value in vars(nodo).items():
+                if isinstance(value, list):
+                    result[key] = [serializar_ast(item) if hasattr(item, '__dict__') else item for item in value]
+                elif hasattr(value, '__dict__'):
+                    result[key] = serializar_ast(value)
+                else:
+                    result[key] = value
+            
+            return result
+        
+        return {"estado": "exito", "ast": serializar_ast(ast_root)}
+    except Exception as e:
+        return {"estado": "error", "error": str(e)}
+    
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

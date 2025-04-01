@@ -51,7 +51,9 @@ class Parser:
         elif self.coincidir('DEVOLVER'):
             return self.analizar_retorno()
         else:
+            self.coincidir('PUNTO_COMA')
             return self.analizar_expresion()
+            return expr
     
     def analizar_declaracion_variable(self) -> ast.DeclaracionVariable:
         nombre = self.esperar('IDENTIFICADOR').valor
@@ -62,6 +64,8 @@ class Parser:
         
         self.esperar('IGUAL')
         valor = self.analizar_expresion()
+
+        self.coincidir('PUNTO_COMA')
         
         return ast.DeclaracionVariable(nombre, tipo, valor)
     

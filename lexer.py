@@ -62,7 +62,7 @@ class Lexer:
             (r'<', 'MENOR'),
             (r'>=', 'MAYOR_IGUAL'),
             (r'<=', 'MENOR_IGUAL'),
-            (r'"[^"]*"', 'CADENA'),
+            (r'"[^"]*"|\'[^\']*\'', 'CADENA'),
             (r'\d+\.\d+', 'DECIMAL'),
             (r'\d+', 'ENTERO'),
             (r'[a-zA-ZñÑáéíóúÁÉÍÓÚ_][a-zA-ZñÑáéíóúÁÉÍÓÚ0-9_]*', 'IDENTIFICADOR')
