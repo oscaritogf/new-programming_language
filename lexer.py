@@ -37,7 +37,7 @@ class Lexer:
         # Patrones de token usando expresiones regulares
         self.patrones = [
             (r'[ \t]+', None),  # Espacios y tabulaciones
-            (r'\n', 'SALTO_LINEA'),
+            (r'\n', None),
             (r'#.*', None),  # Comentarios
             (r'\(', 'PARENTESIS_IZQ'),
             (r'\)', 'PARENTESIS_DER'),

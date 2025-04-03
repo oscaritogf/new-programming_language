@@ -221,12 +221,15 @@ class Parser:
         return expr
     
     def analizar_factor(self) -> ast.Nodo:
+        print(f"Token actual: {self.token_actual.tipo}, Token siguiente: {self.tokens[self.posicion_actual + 1].tipo}")
+
         if self.coincidir('PARENTESIS_IZQ'):
             expr = self.analizar_expresion()
             self.esperar('PARENTESIS_DER')
+            #self.esperar('PUNTO_COMA')
             return expr
         elif self.coincidir('MENOS'):
-          return ast.OperacionUnaria('MENOS', self.analizar_factor())
+            return ast.OperacionUnaria('MENOS', self.analizar_factor())
         elif self.coincidir('NO'):
             return ast.OperacionUnaria('NO', self.analizar_factor())
         elif self.token_actual.tipo == 'ENTERO':
@@ -245,14 +248,24 @@ class Parser:
             return ast.ValorLiteral(True, 'booleano')
         elif self.coincidir('FALSO'):
             return ast.ValorLiteral(False, 'booleano')
+        elif self.coincidir('MOSTRAR'):
+            self.avanzar()  # Avanzamos al siguiente token
+            expr = self.analizar_expresion()  # Analizamos la expresión que sigue
+            self.esperar('PARENTESIS_DER')  # Esperamos el paréntesis derecho
+            #self.esperar('PUNTO_COMA')  # Esperamos el punto y coma
+            return ast.Mostrar(expr)  
+           
         elif self.coincidir('NULO'):
             return ast.ValorLiteral(None, 'nulo')
         elif self.token_actual.tipo == 'IDENTIFICADOR':
-            if self.tokens[self.posicion_actual + 1].tipo == 'PARENTESIS_IZQ':
-                return self.analizar_llamada_funcion()
+            nombre = self.token_actual.valor
+            self.avanzar()
+            
+            # Verificar si hay un operador de asignación después del identificador
+            if self.coincidir('IGUAL'):
+                valor_asignado = self.analizar_expresion()  # Analizar lo que se va a asignar
+                return ast.AsignacionVariable(nombre, valor_asignado)
             else:
-                nombre = self.token_actual.valor
-                self.avanzar()
                 return ast.Identificador(nombre)
         elif self.coincidir('CORCHETE_IZQ'):
             return self.analizar_lista()
@@ -260,6 +273,8 @@ class Parser:
             return self.analizar_diccionario()
         else:
             raise SyntaxError(f"Token inesperado: {self.token_actual.tipo} en línea {self.token_actual.linea}, columna {self.token_actual.columna}")
+            
+
     
     def analizar_llamada_funcion(self) -> ast.LlamadaFuncion:
         nombre = self.esperar('IDENTIFICADOR').valor

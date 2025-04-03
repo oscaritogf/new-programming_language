@@ -16,18 +16,27 @@ import uvicorn
 
 app = FastAPI()
 
+origins = [
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1",
+    "http://localhost:8000",
+    "http://localhost:3000"
+]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Permitir todas las orígenes
     allow_credentials=True,
     allow_methods=["*"],  # Permitir todos los métodos
-    allow_headers=["*"],  # Permitir todos los encabezados
+    allow_headers=["*"],
+
+  # Permitir todos los encabezados
 )
 
 # Configurar plantillas y archivos estáticos
-templates = Jinja2Templates(directory="templates")
+"""templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
+"""
 class CodigoEntrada(BaseModel):
     codigo: str
 

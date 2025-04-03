@@ -112,7 +112,37 @@ class Interprete:
                 else:
                     raise TypeError(f"Operación no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
             
-            # Implementar el resto de operadores...
+            
+            elif nodo.operador == 'MENOS':
+                if izquierda.tipo in ['entero', 'decimal'] and derecha.tipo in ['entero', 'decimal']:
+                    resultado = izquierda.valor - derecha.valor
+                    tipo = 'decimal' if 'decimal' in [izquierda.tipo, derecha.tipo] else 'entero'
+                    return Valor(tipo, resultado)
+                else:
+                    raise TypeError(f"Operación no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
+                
+            elif nodo.operador == 'POR':
+                if izquierda.tipo in ['entero', 'decimal'] and derecha.tipo in ['entero', 'decimal']:
+                    resultado = izquierda.valor * derecha.valor
+                    tipo = 'decimal' if 'decimal' in [izquierda.tipo, derecha.tipo] else 'entero'
+                    return Valor(tipo, resultado)
+                else:
+                    raise TypeError(f"Operación no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
+
+            elif nodo.operador == 'DIVIDIDO':
+                if izquierda.tipo in ['entero', 'decimal'] and derecha.tipo in ['entero', 'decimal']:
+                    if derecha.valor == 0:
+                        raise ZeroDivisionError("División por cero")
+                    resultado = izquierda.valor / derecha.valor
+                    tipo = 'decimal'
+                    return Valor(tipo, resultado)
+                else:
+                    raise TypeError(f"Operación no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
+
+            else:
+                raise NotImplementedError(f"Operador '{nodo.operador}' no implementado")
+            
+            # Falta Implementar el resto de operadores...
             
         # Operación unaria
         elif isinstance(nodo, ast.OperacionUnaria):
@@ -309,6 +339,12 @@ class Interprete:
                 diccionario[clave_eval.valor] = valor_eval
             
             return Valor('diccionario', diccionario)
+        
+        #Mostrar
+        elif isinstance(nodo, ast.Mostrar):
+            valor = self.evaluar(nodo.expresion, entorno)  # Evaluamos la expresión dentro de 'Mostrar'
+            print(valor)  # Imprimimos el valor de la expresión
+            return None
         
         # Elemento HTML
         elif isinstance(nodo, ast.ElementoHTML):

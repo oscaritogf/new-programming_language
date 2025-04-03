@@ -10,6 +10,16 @@ class Programa(Nodo):
     def __init__(self, cuerpo: List[Nodo]):
         self.cuerpo = cuerpo
 
+class Mostrar(Nodo):
+    def __init__(self, expresion):
+        self.expresion = expresion  # Almacenas la expresión que debe ser mostrada
+
+    def ejecutar(self, entorno):
+        # Aquí implementas lo que se debe hacer con la expresión
+        # Por ejemplo, imprimir el resultado
+        print(self.expresion.ejecutar(entorno))  # Asumiendo que la expresión tiene un método ejecutar
+
+
 class DeclaracionVariable(Nodo):
     def __init__(self, nombre: str, tipo: Optional[str], valor: Nodo):
         self.nombre = nombre
