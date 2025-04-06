@@ -1,25 +1,24 @@
 # ast_nodes.py
+# Este archivo define los nodos del árbol sintáctico abstracto (AST) para el lenguaje de programación.
+# Cada clase representa un tipo de nodo en el AST y contiene los atributos necesarios para representar la estructura del código fuente.
 
 from typing import List, Dict, Any, Optional, Tuple
 
-
+# Definición de la clase base para los nodos del AST
 class Nodo:
     pass
 
+# La clase base Nodo no tiene atributos ni métodos específicos, pero puede ser extendida por otras clases para representar diferentes tipos de nodos en el AST.
+# Cada nodo puede contener información relevante sobre su tipo, atributos y relaciones con otros nodos.
 class Programa(Nodo):
     def __init__(self, cuerpo: List[Nodo]):
         self.cuerpo = cuerpo
-
-class Mostrar(Nodo):
-    def __init__(self, expresion):
-        self.expresion = expresion  # Almacenas la expresión que debe ser mostrada
-
-    def ejecutar(self, entorno):
-        # Aquí implementas lo que se debe hacer con la expresión
-        # Por ejemplo, imprimir el resultado
-        print(self.expresion.ejecutar(entorno))  # Asumiendo que la expresión tiene un método ejecutar
+# La clase Programa representa el nodo raíz del AST y contiene una lista de nodos que representan las declaraciones y expresiones en el programa.
+# Cada nodo en el cuerpo puede ser una declaración de variable, una asignación, una función, un condicional, un bucle, etc.
 
 
+# la clase declaracion de variable
+# representa una declaración de variable en el AST.
 class DeclaracionVariable(Nodo):
     def __init__(self, nombre: str, tipo: Optional[str], valor: Nodo):
         self.nombre = nombre

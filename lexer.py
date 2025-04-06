@@ -37,9 +37,9 @@ class Lexer:
         # Patrones de token usando expresiones regulares
         self.patrones = [
             (r'[ \t]+', None),  # Espacios y tabulaciones
-            (r'\n', None),
+            (r'\n', None), # Salto de línea
             (r'#.*', None),  # Comentarios
-            (r'\(', 'PARENTESIS_IZQ'),
+            (r'\(', 'PARENTESIS_IZQ'), 
             (r'\)', 'PARENTESIS_DER'),
             (r'\{', 'LLAVE_IZQ'),
             (r'\}', 'LLAVE_DER'),
@@ -68,11 +68,12 @@ class Lexer:
             (r'[a-zA-ZñÑáéíóúÁÉÍÓÚ_][a-zA-ZñÑáéíóúÁÉÍÓÚ0-9_]*', 'IDENTIFICADOR')
         ]
     
+    # Método para tokenizar el código fuente
     def tokenizar(self, codigo: str) -> List[Token]:
         tokens = []
         linea = 1
         columna = 1
-        
+        ## Posición actual en el código
         i = 0
         while i < len(codigo):
             match = None
