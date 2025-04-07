@@ -1,5 +1,5 @@
 # interpreter.py
-from typing import Dict, Any, List, Optional, Union
+from typing import Dict, Any, Optional
 import ast_nodes as ast
 from parser import Parser
 

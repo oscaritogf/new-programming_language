@@ -1,5 +1,5 @@
 # parser.py
-from typing import List, Dict, Any, Optional, Tuple
+from typing import List
 from lexer import Token
 import ast_nodes as ast
 
