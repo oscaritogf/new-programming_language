@@ -139,6 +139,29 @@ class Interprete:
                 else:
                     raise TypeError(f"Operación no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")      
         
+            elif nodo.operador == 'MENOR':
+                if izquierda.tipo in ['entero', 'decimal'] and derecha.tipo in ['entero', 'decimal']:
+                    resultado = izquierda.valor < derecha.valor
+                    tipo = 'booleano'
+                    return Valor(tipo, resultado)
+                else:
+                    raise TypeError(f"Operación no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
+                
+            elif nodo.operador == 'MENOR_IGUAL':
+                if izquierda.tipo in ['entero', 'decimal'] and derecha.tipo in ['entero', 'decimal']:
+                    resultado = izquierda.valor <= derecha.valor
+                    tipo = 'booleano'
+                    return Valor(tipo, resultado)
+                else:
+                    raise TypeError(f"Operación no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
+                
+            elif nodo.operador == 'MAYOR_IGUAL':
+                if izquierda.tipo in ['entero', 'decimal'] and derecha.tipo in ['entero', 'decimal']:
+                    resultado = izquierda.valor >= derecha.valor
+                    tipo = 'booleano'
+                    return Valor(tipo, resultado)
+                else:
+                    raise TypeError(f"Operación no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
 
             else:
                 raise NotImplementedError(f"Operador '{nodo.operador}' no implementado")

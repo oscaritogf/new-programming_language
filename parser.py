@@ -227,6 +227,10 @@ class Parser:
             expr = self.analizar_expresion()
             self.esperar('PARENTESIS_DER')
             #self.esperar('PUNTO_COMA')
+            siguiente = self.token_actual.tipo
+            if siguiente in ['PARENTESIS_IZQ', 'ENTERO', 'DECIMAL', 'IDENTIFICADOR']:
+                derecha = self.analizar_factor()
+                return ast.OperacionBinaria(expr, 'MULTIPLICACION', derecha)
             return expr
         elif self.coincidir('MENOS'):
             return ast.OperacionUnaria('MENOS', self.analizar_factor())
