@@ -121,7 +121,7 @@ class Interprete:
                 else:
                     raise TypeError(f"Operación no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
                 
-            elif nodo.operador == 'POR':
+            elif nodo.operador == 'MULTIPLICACION':
                 if izquierda.tipo in ['entero', 'decimal'] and derecha.tipo in ['entero', 'decimal']:
                     resultado = izquierda.valor * derecha.valor
                     tipo = 'decimal' if 'decimal' in [izquierda.tipo, derecha.tipo] else 'entero'
@@ -129,15 +129,16 @@ class Interprete:
                 else:
                     raise TypeError(f"Operación no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
 
-            elif nodo.operador == 'DIVIDIDO':
+            elif nodo.operador == 'DIVISION':
                 if izquierda.tipo in ['entero', 'decimal'] and derecha.tipo in ['entero', 'decimal']:
                     if derecha.valor == 0:
                         raise ZeroDivisionError("División por cero")
                     resultado = izquierda.valor / derecha.valor
-                    tipo = 'decimal'
+                    tipo = 'decimal' if 'decimal' in [izquierda.tipo, derecha.tipo] else 'entero'
                     return Valor(tipo, resultado)
                 else:
-                    raise TypeError(f"Operación no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
+                    raise TypeError(f"Operación no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")      
+        
 
             else:
                 raise NotImplementedError(f"Operador '{nodo.operador}' no implementado")
