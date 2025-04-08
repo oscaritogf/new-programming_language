@@ -38,6 +38,8 @@ class Parser:
     def analizar_declaracion(self) -> ast.Nodo:
         if self.coincidir('VARIABLE'):
             return self.analizar_declaracion_variable()
+        elif self.coincidir('LLAMADO'):
+            return self.analizar_llamada_funcion()
         elif self.coincidir('SI'):
             return self.analizar_condicional()
         elif self.coincidir('MIENTRAS'):

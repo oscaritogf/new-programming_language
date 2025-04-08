@@ -31,7 +31,8 @@ class Lexer:
             'o': 'O',
             'no': 'NO',
             'cada': 'CADA',
-            'en': 'EN'
+            'en': 'EN',
+            'llamado': 'LLAMADO'
         }
         
         # Patrones de token usando expresiones regulares
