@@ -367,8 +367,8 @@ class Interprete:
         #Mostrar
         elif isinstance(nodo, ast.Mostrar):
             valor = self.evaluar(nodo.expresion, entorno)  # Evaluamos la expresión dentro de 'Mostrar'
-            print(valor)  # Imprimimos el valor de la expresión
-            return None
+            #print(valor.valor)  # Imprimimos el valor de la expresión
+            return valor
         
         # Elemento HTML
         elif isinstance(nodo, ast.ElementoHTML):

@@ -13,6 +13,9 @@ class Parser:
         self.posicion_actual += 1
         if self.posicion_actual < len(self.tokens):
             self.token_actual = self.tokens[self.posicion_actual]
+            if self.token_actual.tipo != 'SALTO_LINEA':
+                return
+            self.posicion_actual += 1
         else:
             self.token_actual = None
     
@@ -53,8 +56,8 @@ class Parser:
         elif self.coincidir('DEVOLVER'):
             return self.analizar_retorno()
         else:
-            self.coincidir('PUNTO_COMA')
-            return self.analizar_expresion()
+            expr= self.analizar_expresion()
+            self.esperar('PUNTO_COMA')
             return expr
     
     def analizar_declaracion_variable(self) -> ast.DeclaracionVariable:
@@ -223,7 +226,10 @@ class Parser:
         return expr
     
     def analizar_factor(self) -> ast.Nodo:
-        print(f"Token actual: {self.token_actual.tipo}, Token siguiente: {self.tokens[self.posicion_actual + 1].tipo}")
+        #print(f"Token actual: {self.token_actual.tipo}, Token siguiente: {self.tokens[self.posicion_actual + 1].tipo}")
+        siguiente = self.tokens[self.posicion_actual + 1].tipo if self.posicion_actual + 1 < len(self.tokens) else 'EOF'
+        print(f"Token actual: {self.token_actual.tipo}, Token siguiente: {siguiente}")
+
 
         if self.coincidir('PARENTESIS_IZQ'):
             expr = self.analizar_expresion()
@@ -255,12 +261,12 @@ class Parser:
         elif self.coincidir('FALSO'):
             return ast.ValorLiteral(False, 'booleano')
         elif self.coincidir('MOSTRAR'):
-            self.avanzar()  # Avanzamos al siguiente token
+            #self.avanzar()  # Avanzamos al siguiente token
+            self.esperar('PARENTESIS_IZQ')
             expr = self.analizar_expresion()  # Analizamos la expresión que sigue
             self.esperar('PARENTESIS_DER')  # Esperamos el paréntesis derecho
             #self.esperar('PUNTO_COMA')  # Esperamos el punto y coma
             return ast.Mostrar(expr)  
-           
         elif self.coincidir('NULO'):
             return ast.ValorLiteral(None, 'nulo')
         elif self.token_actual.tipo == 'IDENTIFICADOR':
