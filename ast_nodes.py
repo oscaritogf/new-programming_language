@@ -10,6 +10,48 @@ class Programa(Nodo):
     def __init__(self, cuerpo: List[Nodo]):
         self.cuerpo = cuerpo
 
+#nueva clase para las matrices 
+class Matriz:
+    def __init__ (self, dimensiones):
+        self.dimensiones = dimensiones
+        self.elementos = [[0 for _ in range(dimensiones[1])] for _ in range(dimensiones[0])]
+
+    def get_elemento(self, fila, columna):
+        return self.elementos[fila][columna]
+    
+    def set_elemento(self, fila, columna, valor):
+        self.elementos[fila][columna] = valor
+
+    def sumar(self, otra_matriz):
+        if self.dimensiones != otra_matriz.dimensiones:
+            raise ValueError("Las dimensiones de las matrices no coinciden")
+        resultado = Matriz(self.dimensiones)
+        for i in range(self.dimensiones[0]):
+            for j in range(self.dimensiones[1]):
+                resultado.set_elemento(i, j, self.get_elemento(i, j) + otra_matriz.get_elemento(i, j))
+        return resultado
+    
+    def multiplicar(self, otra_matriz):
+        if self.dimensiones[1] != otra_matriz.dimensiones[0]:
+            raise ValueError("Las dimensiones de las matrices no coinciden")
+        resultado = Matriz((self.dimensiones[0], otra_matriz.dimensiones[1]))
+        for i in range(self.dimensiones[0]):
+            for j in range(otra_matriz.dimensiones[1]):
+                suma = 0
+                for k in range(self.dimensiones[1]):
+                    suma += self.get_elemento(i, k) * otra_matriz.get_elemento(k, j)
+                resultado.set_elemento(i, j, suma)
+        return resultado
+    
+    def crear_matriz(self, dimensiones):
+        return Matriz(dimensiones)
+    def sumar_matriz(self, otra_matriz):
+        return self.sumar(otra_matriz)
+    def multiplicar_matriz(self, otra_matriz):
+        return self.multiplicar(otra_matriz)
+    
+    # asta aqui 
+
 class Mostrar(Nodo):
     def __init__(self, expresion):
         self.expresion = expresion  # Almacenas la expresión que debe ser mostrada

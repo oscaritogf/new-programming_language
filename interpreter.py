@@ -7,7 +7,12 @@ class Valor:
     def __init__(self, tipo: str, valor: Any):
         self.tipo = tipo
         self.valor = valor
-    
+
+#probando para interactuar con el usuario
+class InteraccionUsuario(Exception):
+    def __init__(self, mensaje):
+        self.mensaje = mensaje
+
     def __repr__(self):
         return f"Valor({self.tipo}, {self.valor})"
 
@@ -388,7 +393,21 @@ class Interprete:
                 'atributos': atributos_eval,
                 'contenido': contenido_eval
             })
-        
+
+            
+        # esto tambien es nuevo de Matrices
+        elif isinstance(nodo, ast.Matriz):
+            return self.evaluar_matriz(nodo)
+        elif isinstance(nodo, ast.Suma):
+            return self.evaluar_suma(nodo)
+        if isinstance(nodo, ast.Multiplicacion):
+            return self.evaluar_multiplicacion(nodo)
+        elif isinstance(nodo, ast.Resta):
+            return self.evaluar_resta(nodo)
+        elif isinstance(nodo, ast.Division):
+            return self.evaluar_division(nodo)
+            
+
         # Estilo CSS
         elif isinstance(nodo, ast.EstiloCSS):
             # Construir CSS (simplificado)
@@ -411,3 +430,29 @@ class Interprete:
         
         return self.evaluar(ast, self.entorno_global)
     
+    #------AQUI EMPEZAR A HACER LO DE LA MATRIZ Y EL USUARIO--------
+    def evaluar_matriz(self, matriz):
+        resultado = ast.Matriz(matriz.dimensiones)
+        for i in range(matriz.dimensiones[0]):
+            for j in range(matriz.dimensiones[1]):
+                resultado.set_elemento(i, j, matriz.get_elemento(i, j))
+        return resultado
+
+
+    def ejecutar_funcion(self, nombre, argumentos):
+        if nombre == "pedir":
+            mensaje = argumentos[0]
+            return input(str(mensaje))
+        elif nombre == "pedir_numero":
+            mensaje = argumentos[0]
+            valor = input(str(mensaje))
+            return self.convertir_a_numero(valor)
+
+    def convertir_a_numero(valor):
+        try:
+            return int(valor) if valor.isdigit() else float(valor)
+        except:
+            raise Exception(f"No se pudo convertir '{valor}' a número.")
+
+##probando con lo de matriz y interactuar con el usuario
+        

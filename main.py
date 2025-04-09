@@ -84,36 +84,6 @@ async def interpretar_codigo(entrada: CodigoEntrada):
             "columna": columna
         }
 
-"""@app.get("/ast")
-async def obtener_ast(codigo: str):
-    try:
-        from lexer import Lexer
-        lexer = Lexer()
-        tokens = lexer.tokenizar(codigo)
-        
-        parser = Parser(tokens)
-        ast_root = parser.analizar()
-        
-        # Convertir AST a una estructura JSON serializable
-        def serializar_ast(nodo):
-            if nodo is None:
-                return None
-            
-            result = {"tipo": type(nodo).__name__}
-            
-            for key, value in vars(nodo).items():
-                if isinstance(value, list):
-                    result[key] = [serializar_ast(item) if hasattr(item, '__dict__') else item for item in value]
-                elif hasattr(value, '__dict__'):
-                    result[key] = serializar_ast(value)
-                else:
-                    result[key] = value
-            
-            return result
-        
-        return {"estado": "exito", "ast": serializar_ast(ast_root)}
-    except Exception as e:
-        return {"estado": "error", "error": str(e)}"""
 
 
 @app.get("/ast")
