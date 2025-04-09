@@ -57,7 +57,8 @@ class Parser:
             return self.analizar_retorno()
         else:
             expr= self.analizar_expresion()
-            self.esperar('PUNTO_COMA')
+            if self.token_actual and self.token_actual.tipo == 'PUNTO_COMA':
+                self.avanzar()
             return expr
     
     def analizar_declaracion_variable(self) -> ast.DeclaracionVariable:
@@ -190,8 +191,17 @@ class Parser:
     
     def analizar_expresion(self) -> ast.Nodo:
         # Simplificado para este ejemplo
-        return self.analizar_comparacion()
+        return self.analizar_logica()
     
+    def analizar_logica(self) -> ast.Nodo:
+        expr = self.analizar_comparacion()
+        while self.token_actual and self.token_actual.tipo in ['AND', 'OR']:
+            operador = self.token_actual.tipo
+            self.avanzar()
+            derecha = self.analizar_comparacion()
+            expr = ast.OperacionLogica(expr, operador, derecha)
+        return expr
+        
     def analizar_comparacion(self) -> ast.Nodo:
         expr = self.analizar_suma()
         

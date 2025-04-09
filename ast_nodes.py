@@ -57,6 +57,12 @@ class Condicional(Nodo):
         self.cuerpo = cuerpo
         self.sino = sino
 
+class OperacionLogica(Nodo):
+    def __init__(self, izquierda: Nodo, operador: str, derecha: Nodo):
+        self.izquierda = izquierda
+        self.operador = operador  # 'AND' o 'OR'
+        self.derecha = derecha
+
 class BucleWhile(Nodo):
     def __init__(self, condicion: Nodo, cuerpo: List[Nodo]):
         self.condicion = condicion

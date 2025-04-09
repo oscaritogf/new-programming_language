@@ -137,7 +137,18 @@ class Interprete:
                     tipo = 'decimal' if 'decimal' in [izquierda.tipo, derecha.tipo] else 'entero'
                     return Valor(tipo, resultado)
                 else:
-                    raise TypeError(f"Operación no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")      
+                    raise TypeError(f"Operación no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
+            
+            #Modulo(Residuo de Division)
+            elif nodo.operador == 'MODULO':
+                if izquierda.tipo in ['entero', 'decimal'] and derecha.tipo in ['entero', 'decimal']:
+                    if derecha.valor == 0:
+                        raise ZeroDivisionError("División por cero en módulo")
+                    resultado = izquierda.valor % derecha.valor
+                    tipo = 'decimal' if 'decimal' in [izquierda.tipo, derecha.tipo] else 'entero'
+                    return Valor(tipo, resultado)
+                else:
+                    raise TypeError(f"Operación '%' no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
         
             elif nodo.operador == 'MENOR':
                 if izquierda.tipo in ['entero', 'decimal'] and derecha.tipo in ['entero', 'decimal']:
@@ -147,6 +158,14 @@ class Interprete:
                 else:
                     raise TypeError(f"Operación no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
                 
+            elif nodo.operador == 'MAYOR':
+                if izquierda.tipo in ['entero', 'decimal'] and derecha.tipo in ['entero', 'decimal']:
+                    resultado = izquierda.valor > derecha.valor
+                    return Valor('booleano', resultado)
+                else:
+                    raise TypeError(f"Operación '>' no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
+
+
             elif nodo.operador == 'MENOR_IGUAL':
                 if izquierda.tipo in ['entero', 'decimal'] and derecha.tipo in ['entero', 'decimal']:
                     resultado = izquierda.valor <= derecha.valor
@@ -369,6 +388,29 @@ class Interprete:
             valor = self.evaluar(nodo.expresion, entorno)  # Evaluamos la expresión dentro de 'Mostrar'
             #print(valor.valor)  # Imprimimos el valor de la expresión
             return valor
+        
+        #And
+        elif isinstance(nodo, ast.OperacionLogica):
+            izquierda = self.evaluar(nodo.izquierda, entorno)
+            if izquierda.tipo != 'booleano':
+                raise TypeError(f"Operador lógico '{nodo.operador}' requiere operandos booleanos")
+
+            # Cortocircuito lógico
+            if nodo.operador == 'AND':
+                if not izquierda.valor:
+                    return Valor('booleano', False)
+                derecha = self.evaluar(nodo.derecha, entorno)
+                if derecha.tipo != 'booleano':
+                    raise TypeError("El operador '&&' requiere operandos booleanos")
+                return Valor('booleano', izquierda.valor and derecha.valor)
+
+            elif nodo.operador == 'OR':
+                if izquierda.valor:
+                    return Valor('booleano', True)
+                derecha = self.evaluar(nodo.derecha, entorno)
+                if derecha.tipo != 'booleano':
+                    raise TypeError("El operador '||' requiere operandos booleanos")
+                return Valor('booleano', derecha.valor)
         
         # Elemento HTML
         elif isinstance(nodo, ast.ElementoHTML):

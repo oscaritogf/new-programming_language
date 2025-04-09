@@ -64,6 +64,7 @@ class Lexer:
             (r'>', 'MAYOR'),
             (r'<', 'MENOR'),
             (r'&&', 'AND'),
+            (r'\|\|', 'OR'),
             (r'"[^"]*"|\'[^\']*\'', 'CADENA'),
             (r'\d+\.\d+', 'DECIMAL'),
             (r'\d+', 'ENTERO'),
