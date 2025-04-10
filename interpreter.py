@@ -190,6 +190,17 @@ class Interprete:
             else:
                 raise NotImplementedError(f"Operador '{nodo.operador}' no implementado")
             
+        elif nodo.operador == 'DIFERENTE':
+            izquierda = self.evaluar(nodo.izquierda, entorno)
+            derecha = self.evaluar(nodo.derecha, entorno)
+            
+            if izquierda.tipo == derecha.tipo:
+                return Valor('booleano', izquierda.valor != derecha.valor)
+            else:
+                raise TypeError(f"Operación '!=' no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
+                
+                
+            
             # Falta Implementar el resto de operadores...
             
         # Operación unaria
@@ -213,7 +224,32 @@ class Interprete:
             
             if condicion.tipo != 'booleano':
                 raise TypeError(f"La condición debe ser de tipo 'booleano', se obtuvo '{condicion.tipo}'")
-            
+            elif isinstance(nodo, ast.Condicional):
+                condicion = self.evaluar(nodo.condicion, entorno)
+                
+                if condicion.tipo != 'booleano':
+                    raise TypeError(f"La condición debe ser de tipo 'booleano', se obtuvo '{condicion.tipo}'")
+                
+                if condicion.valor:
+                    # Ejecutar bloque 'si'
+                    resultado = None
+                    for statement in nodo.cuerpo:
+                        try:
+                            resultado = self.evaluar(statement, entorno)
+                        except RetornoExcepcion as r:
+                            raise r
+                    return resultado or Valor('nulo', None)
+                elif nodo.sino:
+                    # Ejecutar bloque 'sino'
+                    resultado = None
+                    for statement in nodo.sino:
+                        try:
+                            resultado = self.evaluar(statement, entorno)
+                        except RetornoExcepcion as r:
+                            raise r
+                    return resultado or Valor('nulo', None)
+                else:
+                    return Valor('nulo', None)
             if condicion.valor:
                 # Ejecutar bloque 'si'
                 resultado = None
