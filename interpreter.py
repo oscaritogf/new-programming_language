@@ -179,6 +179,16 @@ class Interprete:
                 else:
                     raise TypeError(f"Operación no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
                 
+            elif nodo.operador == 'DIFERENTE':
+                izquierda = self.evaluar(nodo.izquierda, entorno)
+                derecha = self.evaluar(nodo.derecha, entorno)
+                
+                if izquierda.tipo == derecha.tipo:
+                    return Valor('booleano', izquierda.valor != derecha.valor)
+                else:
+                    raise TypeError(f"Operación '!=' no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
+                    
+                
             elif nodo.operador == 'MAYOR_IGUAL':
                 if izquierda.tipo in ['entero', 'decimal'] and derecha.tipo in ['entero', 'decimal']:
                     resultado = izquierda.valor >= derecha.valor
@@ -190,16 +200,8 @@ class Interprete:
             else:
                 raise NotImplementedError(f"Operador '{nodo.operador}' no implementado")
             
-        elif nodo.operador == 'DIFERENTE':
-            izquierda = self.evaluar(nodo.izquierda, entorno)
-            derecha = self.evaluar(nodo.derecha, entorno)
             
-            if izquierda.tipo == derecha.tipo:
-                return Valor('booleano', izquierda.valor != derecha.valor)
-            else:
-                raise TypeError(f"Operación '!=' no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
-                
-                
+            
             
             # Falta Implementar el resto de operadores...
             
