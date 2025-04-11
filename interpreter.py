@@ -196,10 +196,15 @@ class Interprete:
                     return Valor(tipo, resultado)
                 else:
                     raise TypeError(f"Operación no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
-
+                
+                
+            elif nodo.operador == 'IGUAL_IGUAL':
+                if izquierda.tipo == derecha.tipo:
+                    return Valor('booleano', izquierda.valor == derecha.valor)
+                else:
+                    raise TypeError(f"Operación '==' no soportada entre '{izquierda.tipo}' y '{derecha.tipo}'")
             else:
                 raise NotImplementedError(f"Operador '{nodo.operador}' no implementado")
-            
             
             
             
