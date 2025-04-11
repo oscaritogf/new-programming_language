@@ -207,7 +207,6 @@ class Interprete:
                 raise NotImplementedError(f"Operador '{nodo.operador}' no implementado")
             
             
-            
             # Falta Implementar el resto de operadores...
             
         # Operación unaria

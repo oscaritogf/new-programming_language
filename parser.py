@@ -287,6 +287,8 @@ class Parser:
             if self.coincidir('IGUAL'):
                 valor_asignado = self.analizar_expresion()  # Analizar lo que se va a asignar
                 return ast.AsignacionVariable(nombre, valor_asignado)
+            elif self.coincidir('IGUAL_IGUAL'):
+                return ast.OperacionBinaria(ast.Identificador(nombre), 'IGUAL_IGUAL', self.analizar_expresion())    
             else:
                 return ast.Identificador(nombre)
         elif self.coincidir('CORCHETE_IZQ'):
