@@ -199,6 +199,9 @@ class Interprete:
                 
                 
             elif nodo.operador == 'IGUAL_IGUAL':
+                izquierda = self.evaluar(nodo.izquierda, entorno)
+                derecha = self.evaluar(nodo.derecha, entorno)
+                
                 if izquierda.tipo == derecha.tipo:
                     return Valor('booleano', izquierda.valor == derecha.valor)
                 else:

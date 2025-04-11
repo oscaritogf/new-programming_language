@@ -279,25 +279,23 @@ class Parser:
             return ast.Mostrar(expr)  
         elif self.coincidir('NULO'):
             return ast.ValorLiteral(None, 'nulo')
+        
         elif self.token_actual.tipo == 'IDENTIFICADOR':
             nombre = self.token_actual.valor
             self.avanzar()
-            
             # Verificar si hay un operador de asignación después del identificador
             if self.coincidir('IGUAL'):
                 valor_asignado = self.analizar_expresion()  # Analizar lo que se va a asignar
                 return ast.AsignacionVariable(nombre, valor_asignado)
-            elif self.coincidir('IGUAL_IGUAL'):
-                return ast.OperacionBinaria(ast.Identificador(nombre), 'IGUAL_IGUAL', self.analizar_expresion())    
             else:
-                return ast.Identificador(nombre)
+                return ast.Identificador(nombre)              
         elif self.coincidir('CORCHETE_IZQ'):
             return self.analizar_lista()
         elif self.coincidir('LLAVE_IZQ'):
             return self.analizar_diccionario()
         else:
-            raise SyntaxError(f"Token inesperado: {self.token_actual.tipo} en línea {self.token_actual.linea}, columna {self.token_actual.columna}")
-            
+            raise SyntaxError(f"Token inesperado '{self.token_actual.tipo}' en línea {self.token_actual.linea}, columna {self.token_actual.columna}")
+           
 
     
     def analizar_llamada_funcion(self) -> ast.LlamadaFuncion:
