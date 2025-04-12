@@ -415,7 +415,8 @@ class Interprete:
         elif isinstance(nodo, ast.ListaValores):
             valores = []
             for expr in nodo.valores:
-                valores.append(self.evaluar(expr, entorno))
+                valor_evaluado = self.evaluar(expr, entorno)
+                valores.append(valor_evaluado.valor)
             return Valor('lista', valores)
         
         # Diccionario
