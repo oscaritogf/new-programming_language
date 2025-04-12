@@ -27,8 +27,6 @@ class Lexer:
             'verdadero': 'VERDADERO',
             'falso': 'FALSO',
             'nulo': 'NULO',
-            'y': 'Y',
-            'o': 'O',
             'no': 'NO',
             'cada': 'CADA',
             'en': 'EN',

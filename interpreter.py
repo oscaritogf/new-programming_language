@@ -2,6 +2,7 @@
 from typing import Dict, Any, Optional
 import ast_nodes as ast
 from parser import Parser
+from lexer import Lexer
 
 class Valor:
     def __init__(self, tipo: str, valor: Any):
@@ -66,6 +67,12 @@ class Interprete:
         # Funciones nativas
         # Ejemplos: mostrar, alerta, etc.
         pass
+
+    def mostrar_tokens_en_consola(codigo: str):
+        lexer = Lexer()
+        tokens = lexer.tokenizar(codigo)
+        for token in tokens:
+            print(token)
     
     def evaluar(self, nodo: ast.Nodo, entorno: Entorno) -> Valor:
         # Programa

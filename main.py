@@ -8,7 +8,7 @@ from interpreter import Interprete
 from parser import Parser
 from html_renderer import HTMLRenderer
 from fastapi.middleware.cors import CORSMiddleware
-
+from lexer import Lexer
 
 
 import traceback
@@ -121,5 +121,26 @@ async def obtener_ast(codigo: str):
     except Exception as e:
         return {"estado": "error", "error": str(e)}
     
+@app.post("/tokens")
+async def obtener_tokens(entrada: CodigoEntrada):
+    try:
+        lexer = Lexer()
+        tokens = lexer.tokenizar(entrada.codigo)
+
+        tokens_formateados = [
+            {
+                "tipo": token.tipo,
+                "valor": token.valor,
+                "linea": token.linea,
+                "columna": token.columna
+            }
+            for token in tokens
+        ]
+
+        return {"estado": "exito", "tokens": tokens_formateados}
+    
+    except Exception as e:
+        return {"estado": "error", "mensaje": str(e)}
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
